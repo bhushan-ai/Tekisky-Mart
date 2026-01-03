@@ -1,21 +1,22 @@
 import express from "express";
+import userRoute from "./routes/user.route.js";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import connectDb from "./db/dbConnection.js";
 import cors from "cors";
-import "dotenv/config";
-import connectdb from "./db/dbConnection.js";
-import userRoutes from "./routes/userRoutes.js";
 
+dotenv.config();
 const app = express();
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 4000;
 
-//parsing middleware
-app.use(cors());
+//Parsing
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+app.use(cookieParser());
 
-//Routes
-app.use("/api/user", userRoutes);
+app.use("/api/user", userRoute);
 
-connectdb()
+connectDb()
   .then(() => {
     app.listen(PORT, () =>
       console.log(`Server running on http://localhost:${PORT}`)
