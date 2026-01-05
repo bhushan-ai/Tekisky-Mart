@@ -38,7 +38,7 @@ export const register = async (req, res) => {
 
     res.status(201).json({
       message: "Registration Successfully Done!",
-      user,
+      data: user,
     });
   } catch (error) {
     res.status(500).json({
@@ -124,11 +124,17 @@ export const updateUser = async (req, res) => {
 
     const userId = req.user._id;
 
-    const user = await User.findByIdAndUpdate(userId, {
-      name,
-      email,
-      password,
-    });
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        name,
+        email,
+        password,
+      },
+      {
+        new: true,
+      }
+    );
 
     if (!user) {
       res.status(400).json({
