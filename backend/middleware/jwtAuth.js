@@ -9,9 +9,9 @@ export const jwtAuth = async (req, res, next) => {
       res.status(400).json({ message: "token is not present" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.SECRET);
 
-    const user = await User.findById(decoded.id).select("-password"); 
+    const user = await User.findById(decoded.id).select("-password");
 
     if (!user) {
       res.status(400).json({ message: "user no longer Exist" });

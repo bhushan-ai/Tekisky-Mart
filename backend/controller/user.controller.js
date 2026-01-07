@@ -2,6 +2,14 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../model/user.model.js";
 
+console.log("secret", process.env.SECRET);
+//creating token
+function createJwtToken(id) {
+  return jwt.sign({ id }, process.env.SECRET, {
+    expiresIn: "1d",
+  });
+}
+
 //Creating user/Admin
 export const register = async (req, res) => {
   try {
@@ -71,9 +79,7 @@ export const login = async (req, res) => {
       res.status(400).json({ message: "Password is incorrect" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
-    });
+    const token = createJwtToken(user._id);
 
     res.cookie("token", token, {
       httpOnly: true,
@@ -82,7 +88,11 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, //1d
     });
 
-    res.status(200).json({ message: "Login done Successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Login done Successfully",
+      token: token,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Login failed" });
