@@ -98,39 +98,50 @@ export const addProduct = async (req, res) => {
   }
 };
 
-
 //Updating Product Details
 export const updateProductDetail = async (req, res) => {
   try {
     //Getting User
     const userId = req.user?._id;
     if (!userId) {
-      res.status(404).json({ success: false, message: "User Id not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User Id not found" });
     }
     //Checking User Exist or not
     const user = await User.findById(userId);
     if (!user) {
-      res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     //Checking the user is ADMIN or not
     if (user.role !== "Admin") {
-      res.status(404).json({ success: false, message: "User is not Admin" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User is not Admin" });
     }
 
     //getting product id from params for updating the product
-    const { productId } = req.params;
+    const { id: productId } = req.params;
+
+    console.log("PRODUCTID", productId);
 
     //Checking product Id is available or not
-    if (productId) {
-      res.status(404).json({ success: false, message: "Product Id not found" });
+    if (!productId) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product Id not found" });
     }
 
     const updatedProduct = await Product.findById(productId);
 
     //Checking product is available or not
     if (!updatedProduct) {
-      res.status(404).json({ success: false, message: "Product not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Product not found" });
     }
 
     //Getting product Details from body
@@ -144,14 +155,6 @@ export const updateProductDetail = async (req, res) => {
       stock,
       category,
     } = req.body;
-
-    //Checking the product details
-    if (!name || !description || !image || !price || !stock || !category) {
-      return res.status(400).json({
-        success: false,
-        message: "All info required",
-      });
-    }
 
     //updating product Details
     updatedProduct.name = name ? name : updatedProduct.name;
