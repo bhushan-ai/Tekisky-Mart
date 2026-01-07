@@ -2,7 +2,6 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../model/user.model.js";
 
-console.log("secret", process.env.SECRET);
 //creating token
 function createJwtToken(id) {
   return jwt.sign({ id }, process.env.SECRET, {

@@ -35,6 +35,7 @@ export const handleImage = async (req, res) => {
   }
 };
 
+
 //Adding Product
 export const addProduct = async (req, res) => {
   try {
@@ -126,7 +127,6 @@ export const updateProductDetail = async (req, res) => {
     //getting product id from params for updating the product
     const { id: productId } = req.params;
 
-    console.log("PRODUCTID", productId);
 
     //Checking product Id is available or not
     if (!productId) {
