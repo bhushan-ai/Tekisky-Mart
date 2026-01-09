@@ -35,7 +35,6 @@ export const handleImage = async (req, res) => {
   }
 };
 
-
 //Adding Product
 export const addProduct = async (req, res) => {
   try {
@@ -127,7 +126,6 @@ export const updateProductDetail = async (req, res) => {
     //getting product id from params for updating the product
     const { id: productId } = req.params;
 
-
     //Checking product Id is available or not
     if (!productId) {
       return res
@@ -179,6 +177,102 @@ export const updateProductDetail = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Server side error occur while Updating product",
+      error: error.message,
+    });
+  }
+};
+
+//delete Product Details
+export const deleteProduct = async (req, res) => {
+  try {
+    //Getting User
+    const userId = req.user?._id;
+    if (!userId) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User Id not found" });
+    }
+    //Checking User Exist or not
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    //Checking the user is ADMIN or not
+    if (user.role !== "Admin") {
+      return res
+        .status(404)
+        .json({ success: false, message: "User is not Admin" });
+    }
+
+    //getting product id from params for updating the product
+    const { id: productId } = req.params;
+
+    //Checking product Id is available or not
+    if (!productId) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product Id not found" });
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    res.status(201).json({
+      success: true,
+      message: "Product Deleted Successfully",
+      data: deletedProduct,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server side error occur while deleting product",
+      error: error.message,
+    });
+  }
+};
+//delete all Product
+export const deleteAllProducts = async (req, res) => {
+  try {
+    //Getting User
+    const userId = req.user?._id;
+    if (!userId) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User Id not found" });
+    }
+    //Checking User Exist or not
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    //Checking the user is ADMIN or not
+    if (user.role !== "Admin") {
+      return res
+        .status(404)
+        .json({ success: false, message: "User is not Admin" });
+    }
+
+    const deletedProduct = await Product.deleteMany({});
+    if (!deletedProduct < 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Products not delete" });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Products Deleted Successfully",
+      data: deletedProduct,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server side error occur while deleting all products",
       error: error.message,
     });
   }
