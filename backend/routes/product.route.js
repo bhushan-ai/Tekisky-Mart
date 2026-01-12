@@ -3,6 +3,7 @@ import {
   addProduct,
   deleteAllProducts,
   deleteProduct,
+  fetchAllProduct,
   handleImage,
   updateProductDetail,
 } from "../controller/Admin/product.controller.js";
@@ -17,5 +18,6 @@ productRoute.post("/add-product", jwtAuth, addProduct);
 productRoute.post("/edit-product/:id", jwtAuth, updateProductDetail);
 productRoute.delete("/delete-one/:id", jwtAuth, deleteProduct);
 productRoute.delete("/delete-all", jwtAuth, deleteAllProducts);
+productRoute.get("/all", fetchAllProduct);
 
 export default productRoute;

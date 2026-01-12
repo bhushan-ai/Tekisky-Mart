@@ -278,3 +278,23 @@ export const deleteAllProducts = async (req, res) => {
     });
   }
 };
+export const fetchAllProduct = async (req, res) => {
+  try {
+    const getAllProducts = await Product.find({});
+    if (getAllProducts < 1) {
+      return res.status(404).json({ success: false, message: "No product" });
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "Products fetched Successfully",
+      data: getAllProducts,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Server side error occur while fetching all products",
+      error: error.message,
+    });
+  }
+};
